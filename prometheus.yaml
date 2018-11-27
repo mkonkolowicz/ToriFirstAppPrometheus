@@ -1,3 +1,4 @@
+#Prometheus deployment, note the meta data matching the service monitor
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
@@ -9,6 +10,7 @@ spec:
   resources:
     requests:
       memory: 400Mi
+#Service monitor deployment: note the selector and namespace selector, which tie the service monitor to an app
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -26,6 +28,7 @@ spec:
   endpoints:
   - port: web
     interval: 5s
+#Service deployment: Exposes the prometheus instance to navigation from a UI perspective
 ---
 apiVersion: v1
 kind: Service
