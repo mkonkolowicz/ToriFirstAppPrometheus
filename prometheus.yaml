@@ -1,0 +1,42 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Prometheus
+metadata:
+  name: torifirstapp
+spec:
+  serviceMonitorSelector:
+    matchLabels:
+      app: torifirstapp
+  resources:
+    requests:
+      memory: 400Mi
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: torifirstapp
+  labels:
+    app: torifirstapp
+spec:
+  selector:
+    matchLabels:
+      app: torifirstapp
+  namespaceSelector:
+    matchNames:
+    - default
+  endpoints:
+  - port: web
+    interval: 5s
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    prometheus: torifirstapp
+  name: prometheus-torifirstapp
+spec:
+  ports:
+  - name: web
+    port: 9090
+    targetPort: web
+  selector:
+    prometheus: torifirstapp
